@@ -6,8 +6,8 @@ on:
       - main
 
 env:
-  AWS_REGION: us-east-1  # update if you are in a different region
-  AWS_LAMBDA_ROLE_ARN: arn:aws:iam::523734927941:role/lambda-image-processing-role  # replace with your ARN
+  AWS_REGION: us-east-1
+  AWS_LAMBDA_ROLE_ARN: arn:aws:iam::523734927941:role/lambda-image-processing-role
 
 jobs:
   deploy-resize:
@@ -79,6 +79,7 @@ jobs:
           role: ${{ env.AWS_LAMBDA_ROLE_ARN }}
           publish: true
 
+
   deploy-greyscale:
     name: Deploy Greyscale Lambda
     runs-on: ubuntu-latest
@@ -147,6 +148,7 @@ jobs:
           image-uri: ${{ steps.greyscale-build-image.outputs.image }}
           role: ${{ env.AWS_LAMBDA_ROLE_ARN }}
           publish: true
+
 
   deploy-exif:
     name: Deploy EXIF Lambda
