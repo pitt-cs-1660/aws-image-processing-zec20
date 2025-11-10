@@ -40,11 +40,10 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           cd lambdas/resize
-          ######
-          #
-          #  TODO: implement build and push to ECR
-          #
-          ######
+          docker build -t $ECR_REPOSITORY -f Dockerfile.resize .
+          docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
           exit 1
 
       - name: Check if Lambda function exists
@@ -112,11 +111,10 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           cd lambdas/greyscale
-          ######
-          #
-          #  TODO: implement build and push to ECR
-          #
-          ######
+          docker build -t $ECR_REPOSITORY -f Dockerfile.greyscale .
+          docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
           exit 1
 
       - name: Check if Lambda function exists
@@ -185,11 +183,10 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           cd lambdas/exif
-          ######
-          #
-          #  TODO: implement build and push to ECR
-          #
-          ######
+          docker build -t $ECR_REPOSITORY -f Dockerfile.exif .
+          docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
           exit 1
 
       - name: Check if Lambda function exists
