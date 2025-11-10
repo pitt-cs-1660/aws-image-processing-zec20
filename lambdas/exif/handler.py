@@ -51,8 +51,51 @@ def exif_handler(event, context):
                     #  TODO: add exif lambda code here
                     #
                     ######
+                    # Download image from S3
+                    image = download_from_s3(bucket_name, object_key)
 
+                    # Extract EXIF metadata
+                    exif_data = image.getexif()
+                    metadata = {}
+
+                    def safe_convert(value):
+                        """Convert EXIF values to JSON-safe types."""
+                        try:
+                            # Handle Pillow IFDRational / TiffIFDRational
+                            if value.__class__.__name__ in ("IFDRational", "TiffIFDRational"):
+                                return float(value)
+                            # Handle fraction-like objects
+                            if hasattr(value, "numerator") and hasattr(value, "denominator"):
+                                return float(value.numerator) / float(value.denominator)
+                            # Handle bytes
+                            if isinstance(value, bytes):
+                                return value.decode(errors="ignore")
+                            # Handle sequences
+                            if isinstance(value, (list, tuple)):
+                                return [safe_convert(v) for v in value]
+                            # Basic JSON types
+                            if isinstance(value, (str, int, float, bool)) or value is None:
+                                return value
+                            # Fallback: string conversion
+                            return str(value)
+                        except Exception as e:
+                            return f"unserializable ({str(e)})"
+
+                    for tag, value in exif_data.items():
+                        tag_name = str(tag)
+                        metadata[tag_name] = safe_convert(value)
+
+                    if not metadata:
+                        metadata = {"info": "No EXIF metadata found"}
+
+                    json_data = json.dumps(metadata, indent=2, ensure_ascii=False).encode("utf-8")
+
+                    filename = Path(object_key).stem
+                    output_key = f"processed/exif/{filename}.json"
+                    upload_to_s3(bucket_name, output_key, json_data, content_type="application/json")
+                    print(f"Uploaded EXIF data to s3://{bucket_name}/{output_key}")
                     processed_count += 1
+
 
                 except Exception as e:
                     failed_count += 1
