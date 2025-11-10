@@ -39,12 +39,10 @@ jobs:
           ECR_REPOSITORY: resize-lambda
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          cd lambdas/resize
           docker build -t $ECR_REPOSITORY -f Dockerfile.resize .
           docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-          exit 1
 
       - name: Check if Lambda function exists
         id: check-lambda-resize
@@ -76,8 +74,8 @@ jobs:
         uses: aws-actions/aws-lambda-deploy@v1.1.0
         with:
           function-name: resize-lambda
-          package-type: Image  # no zip!
-          image-uri: ${{ steps.resize-build-image.outputs.image }}  # ECR image URI from previous step
+          package-type: Image
+          image-uri: ${{ steps.resize-build-image.outputs.image }}
           role: ${{ env.AWS_LAMBDA_ROLE_ARN }}
           publish: true
 
@@ -110,12 +108,10 @@ jobs:
           ECR_REPOSITORY: greyscale-lambda
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          cd lambdas/greyscale
           docker build -t $ECR_REPOSITORY -f Dockerfile.greyscale .
           docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-          exit 1
 
       - name: Check if Lambda function exists
         id: check-lambda-greyscale
@@ -147,11 +143,10 @@ jobs:
         uses: aws-actions/aws-lambda-deploy@v1.1.0
         with:
           function-name: greyscale-lambda
-          package-type: Image  # no zip!
-          image-uri: ${{ steps.greyscale-build-image.outputs.image }}  # ECR image URI from previous step
+          package-type: Image
+          image-uri: ${{ steps.greyscale-build-image.outputs.image }}
           role: ${{ env.AWS_LAMBDA_ROLE_ARN }}
           publish: true
-
 
   deploy-exif:
     name: Deploy EXIF Lambda
@@ -182,12 +177,10 @@ jobs:
           ECR_REPOSITORY: exif-lambda
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          cd lambdas/exif
           docker build -t $ECR_REPOSITORY -f Dockerfile.exif .
           docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-          exit 1
 
       - name: Check if Lambda function exists
         id: check-lambda-exif
@@ -219,8 +212,7 @@ jobs:
         uses: aws-actions/aws-lambda-deploy@v1.1.0
         with:
           function-name: exif-lambda
-          package-type: Image  # no zip!
-          image-uri: ${{ steps.exif-build-image.outputs.image }}  # ECR image URI from previous step
+          package-type: Image
+          image-uri: ${{ steps.exif-build-image.outputs.image }}
           role: ${{ env.AWS_LAMBDA_ROLE_ARN }}
           publish: true
-
