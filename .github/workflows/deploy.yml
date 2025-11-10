@@ -39,7 +39,8 @@ jobs:
           ECR_REPOSITORY: resize-lambda
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REPOSITORY -f Dockerfile .
+          cd lambdas/resize
+          docker build -t $ECR_REPOSITORY -f ../../Dockerfile ../../
           docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
@@ -109,7 +110,8 @@ jobs:
           ECR_REPOSITORY: greyscale-lambda
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REPOSITORY -f Dockerfile .
+          cd lambdas/greyscale
+          docker build -t $ECR_REPOSITORY -f ../../Dockerfile ../../
           docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
@@ -179,7 +181,8 @@ jobs:
           ECR_REPOSITORY: exif-lambda
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REPOSITORY -f Dockerfile .
+          cd lambdas/exif
+          docker build -t $ECR_REPOSITORY -f ../../Dockerfile ../../
           docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
