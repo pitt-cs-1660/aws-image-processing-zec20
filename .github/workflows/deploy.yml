@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  AWS_LAMBDA_ROLE_ARN: arn:aws:iam::523734927941:role/lambda-image-processing-role
+  AWS_LAMBDA_ROLE_ARN: arn:aws:iam::384711117834:role/lambda-image-processing-role
 
 jobs:
   deploy-resize:
